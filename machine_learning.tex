@@ -1,0 +1,228 @@
+\documentclass[12pt, a4paper, english]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{makecell}
+\usepackage{fourier}
+\usepackage{caption}
+\usepackage{amssymb}
+\usepackage[linesnumbered]{algorithm2e} %,lined,boxed,commentsnumbered
+\usepackage{subcaption}
+\usepackage{epigraph}
+\usepackage{tikz}
+\usepackage{babel}
+\usepackage{amsfonts}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{csquotes}
+\usepackage{underscore}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{biblatex}
+\usepackage[rightcaption]{sidecap}
+\usepackage{graphicx}
+\usepackage{tabularx}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\graphicspath{ {img/} }
+\addbibresource{bib/bibliography.bib}
+
+\author{Niccolò Simonato}
+\title{Machine Learning: notes}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter{Introduction}
+\section{Different kinds of learning}
+There are two main kinds of machine learning:
+\begin{itemize}
+    \item \textbf{Supervised Learning}, where the training set is composed of labeled tuples $(x_{i},y_{i})$, where $y_{i}$ is the label.
+    \item \textbf{Unsupervised Learning}, where the training set is composed just of unlabeled elements $x_{i}$.
+\end{itemize}
+Also, basing on the type of $y_{i}$, we have \textbf{Regression} ($y_{i}$ is continuous) and
+\textbf{Classification} ($y_{i}$ is discrete).
+\section{Recalls to Theory of Probability for Discrete Random Variables}
+\subsection{Distributions and Probability}
+A probability space is a tuple $(Z, F, D)$, where:
+\begin{definition}
+    $Z$ is the \textbf{sample space}, the set of all possible outcomes
+of the random process modeled by the probability space.
+\end{definition}
+\begin{definition}
+    $F$ is the \textbf{family of allowable events}, a set of events $A \subseteq F$
+\end{definition}
+\begin{definition}
+    $D$ is the \textbf{Probability distribution}, a function $D: F \rightarrow [0,1]$ that:
+    \begin{itemize}
+        \item $D[Z] = 1$
+        \item Given $E_{1}, E_{2}, \dots$ the sequence of pairwise mutually disjoint events:
+        $D[\bigcup_{i \geq 1} E_{i}] = \sum_{i \geq 1} D[E_{i}]$
+    \end{itemize}
+\end{definition}
+\subsection{Notation}
+\begin{itemize}
+    \item We say that $z \sim D$ when $z \in Z$ is sampled according to $D$.
+    \item Given a function $f: Z \rightarrow \{true, false\}$, the \textbf{probability of $f(z)$} is \\
+    \begin{definition}
+        $\mathbb{P}_{z \sim D}[f(z)] = D(\{z \in Z: f(z) = true\})$
+    \end{definition}
+    \item The \textbf{probability can be expressed with an event $A \subseteq Z$}. \\
+    \begin{definition}
+        $A = \{z \in Z: \pi_{A}(z) = true\}$, where $\pi_{a}: Z \rightarrow \{true, false\}$.\\
+    \end{definition}
+    \item Then, $\mathbb{P}[A] = \mathbb{P}_{z \sim D}[\pi_{A}(z)] = D(A)$.
+\end{itemize}
+
+\subsection{Independent Events}
+\begin{definition}
+    Two events $A, B$ are said to be independent when\\$\mathbb{P}[A \cap B] = \mathbb{P}[A] \cdot \mathbb{P}[B]$
+\end{definition}
+\subsection{Random Variables}
+\begin{definition}
+    A random variable $X(z)$ is a function $X: Z \rightarrow \mathbb{R}$. \\
+    A random variable can also be vectorial, when $X \in \mathbb{R}^{n}$.
+\end{definition}
+Each random variable has a Probability Mass Function (PMF) and a Cumulative Distribution
+Function (CDF) associated:
+\begin{definition}
+    The Probability Mass Function of the r.v. $X$ is defined as\\$p_{X}(x) = \mathbb{P}[X = x]$
+\end{definition}
+\begin{definition}
+    The Cumulative Distribution Function of the r.v. $X$ is defined as\\$F_{X}(x) = \mathbb{P}[X \leq x]$\\
+    $= \sum_{k \leq x} p_{X}(k)$
+\end{definition}
+Two random variables, such as two events, can be independent:
+\begin{definition}
+    Two random variables $X, Y$ are said to be independent when\\$\mathbb{P}[(X = x) \cap (Y = y)] = \mathbb{P}[X = x] \cdot \mathbb{P}[Y = y]$, for all the values of $x$ and $y$.
+\end{definition}
+\subsection{Expected Value and Moments}
+\begin{definition}
+    The \textbf{Expected Value} of a random variable $X$ is defined as\\$E[X] = \sum_{x} x \cdot p_{X}(x)$.
+\end{definition}
+\begin{definition}
+    The \textbf{k-th Moment} of a random variable $X$ is defined as\\$E[X^{k}] = \sum_{x} x^{k} \cdot p_{X}(x)$.
+\end{definition}
+\begin{definition}
+    The \textbf{Variance} of a random variable $X$ is defined as\\$Var[X] = E[(X - \mu_{x})^{2}] = E[X^{2}] - E[X]^{2}$.
+\end{definition}
+\begin{definition}
+    The \textbf{Covariance} of two random variables $X, Y$ is defined as\\$Cov(X,Y) = E[(X - \mu_{x})(Y - \mu_{y})]$.
+\end{definition}
+\subsubsection{Properties}
+\begin{itemize}
+    \item The Expected Value of a random variable is a linear operator: $E[aX + bY + c] = aE[X] + bE[Y] + c$.
+    \item The Variance, though, is not linear: $Var[aX + b] = a^{2}Var[X]$.
+    \item Also, $Var[X + Y] = Var[X] + Var[Y] + 2Cov(X, Y)$.
+\end{itemize}
+\subsection{Conditional Probability}
+\begin{definition}
+    The probability of the event $A$ given the event $B$ is defined as \\$\mathbb{P}[A|B] = \frac{\mathbb{P}[A \cap B]}{\mathbb{P}[B]}$.
+\end{definition}
+\subsection{Chebyshev's Inequality}
+\begin{definition}
+    The Chebyshev's inequality is defined as follows:\\
+    Given $E[X] = \mu, Var[X] = \sigma$, then \\
+    $\mathbb{P}[|X - \mu| > \epsilon] \leq \frac{\sigma^{2}}{\epsilon^{2}}$
+\end{definition}
+\subsection{Law of Large Numbers}
+\begin{definition}
+    $\lim_{n \rightarrow + \infty} \mathbb{P}[|\frac{1}{n}\sum (X_{i} - \mu)| > \epsilon] = 0$
+\end{definition}
+\subsection{Law of Total Probability}
+\begin{definition}
+    $\mathbb{P}[A] = \sum_{i=1}^{n} \mathbb{P}[A|C_{i}] \cdot \mathbb{P}[C_{i}]$,\\
+    Given $C_{1}, C_{2}, \dots , C_{n}$ a partition of $\Omega$.
+\end{definition}
+
+\chapter{Learning Model}
+\section{Definition}
+This section will define what kind of objects out \emph{learner} as access to:
+\begin{definition}
+    The \textbf{Domain Set} $X$ is the set of all possible objects to make predictions about.\\
+    Usually, each object $x \in X$ is represented as a vector, in which each component is a \emph{feature}.
+\end{definition}
+\begin{definition}
+    The \textbf{Label Set} $Y$ is the finite set of possible labels.
+\end{definition}
+\begin{definition}
+    The \textbf{Training Set} $S$ is the finite set of tuples, that represent a subset of the labeled domain points.\\$S = ((x_{1}, y_{1}), (x_{2}, y_{2}), \dots, (x_{m}, y_{m}))$
+\end{definition}
+\begin{definition}
+    The \textbf{Learner's output, or hypothesis} $h: X \rightarrow Y$ is the prediction rule.\\
+    Given an element $x \in X$ it produces a label $y \in Y$.
+\end{definition}
+\begin{definition}
+    The \textbf{Data-Generation model}:\\
+    It is assumed that the data in $X$ are produced by some \emph{unknown} probability distribution $D$.\\
+    Also, it is assumed that exists an \emph{unknown} \textbf{labeling function} $f:  X \rightarrow Y$ that predicts correctly the labels.
+\end{definition}
+\begin{definition}
+    The \textbf{Measure of success} is the probability that the Learner does not predict the label correctly.
+\end{definition}
+\section{Loss}
+Let's consider the set $A \subset X$, where $D(A)$ is the probability of observing a point $x \in A$.\newline
+Let $\pi: X \rightarrow \{0, 1\}$.\newline
+Let $A = \{x \in X: \pi(x) = 1\}$.\newline
+Then, $\mathbb{P}_{x \sim D}[\pi(x)] = D(A)$.
+\begin{definition}
+    The \textbf{Error of the prediction rule, or generalization error} is defined as:\\
+    $L_{D,f}(h) = \mathbb{P}_{x \sim D}[h(x) \neq f(x)] = D(\{x: h(x) \neq f(x)\})$
+\end{definition}
+To indicate a learner's prediction rule based on a training set $S$ we'll use $h_{S}:X \rightarrow Y$.\newline
+It is now clear that, in order to succeed, it is necessary to find an $h_{S}$ that minimizes $L_{D,f}(h)$.
+\section{Empirical Risk Minimization}
+As we have previously seen, we can minimize the generalization error in order to improve our learner.\newline
+There's just one problem: $L_{D,f}(h)$ is unknown. Therefore, we have to find a different measure.\newline
+Let's consider the \textbf{Training error}:
+\begin{definition}
+    The \textbf{Training error} is defined as follows:\\
+    $L_{S}(h) = \frac{|\{i: h(x_{i}) \neq y_{i}, 1 \leq i \leq m\}|}{m}$
+\end{definition}
+The \textbf{Empirical Risk Minimization} aims to minimize $L_{S}$, in order to improve $h$.\newline
+The problem with this approach is that this can lead to \textbf{overfitting}:
+since the \emph{generalization error} and the \emph{empirical error} are not the same, we could obtain a model where the former is high and the latter is low.
+\section{Hypothesis Class}
+In order to prevent overfitting, we can apply ERM with a restricted set of \textbf{hypothesis}.\newline
+This means that we choose $h$ from a defined set $H$.\newline
+In particular, we choose an $h$ such that:\\
+$ERM_{H} \in \argmin_{h \in H} L_{S}(h)$. \newline
+Also, let $H$ be a finite set, and $h_{S}$ be the output of $ERM_{S}$, that is:\\
+$h_{S} \in \argmin_{h \in H} L_{S}(h)$.\newline
+In order for this to work, we have to make two assumptions:
+\begin{itemize}
+    \item \textbf{Realizability}: there must be some $h^{*} \in H$ such that $L_{D,f}(h^{*}) = 0$
+    \item \textbf{i.i.d}\footnote{identically, indipendently distributed}: the examples in the training set must be independently and identically distributed (i.i.d) according to $D$.
+\end{itemize}
+\section{PAC learning}
+If we consider the previously made assumptions, it is clear that will be very hard to create the perfect model.\newline
+This is the reason why this method is called \textbf{Probably Approximately Correct (PAC)} learning:
+\begin{itemize}
+    \item The model can only be \emph{approximately} correct;
+    \item The model can only be \emph{probably} correct.
+\end{itemize}
+This two degrees of correctness are defined by two parameters:
+\begin{itemize}
+    \item The parameter $\epsilon$ is the \textbf{accuracy parameter}. $L_{D,f}(h_{s}) \leq \epsilon$
+    \item The parameter $\delta$ is the \textbf{confidence parameter}. This represents the probability that $h_{S}$ is not a good hypothesis, or that $h_{S}$ is a good hypothesis with probability
+    $1 - \delta$.
+\end{itemize}
+\begin{theorem}
+    Let $H$ be a finite hypothesis class.\\
+    Let $\epsilon, \delta \in (0,1)$ and $m \in \mathbb{N}$ such that:\newline
+    $m \geq \frac{log(|H| / \delta)}{\epsilon}$\newline
+    Then, for any $f$ and any $D$ for which the realizability assumption holds, with probability
+    $\geq 1 - \delta$ we have that, for every $ERM$ hypothesis $h_{S}$, is true that: \newline
+    $L_{D,f}(h_{S}) \leq \epsilon$.
+\end{theorem}
+\begin{proof}
+\end{proof}
+
+\printbibliography
+\end{document}

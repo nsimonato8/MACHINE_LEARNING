@@ -1,0 +1,20 @@
+\babel@toc {english}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Different kinds of learning}{2}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Recalls to Theory of Probability for Discrete Random Variables}{2}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Distributions and Probability}{2}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}Notation}{3}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3}Independent Events}{3}{subsection.1.2.3}%
+\contentsline {subsection}{\numberline {1.2.4}Random Variables}{3}{subsection.1.2.4}%
+\contentsline {subsection}{\numberline {1.2.5}Expected Value and Moments}{4}{subsection.1.2.5}%
+\contentsline {subsubsection}{Properties}{4}{section*.2}%
+\contentsline {subsection}{\numberline {1.2.6}Conditional Probability}{4}{subsection.1.2.6}%
+\contentsline {subsection}{\numberline {1.2.7}Chebyshev's Inequality}{4}{subsection.1.2.7}%
+\contentsline {subsection}{\numberline {1.2.8}Law of Large Numbers}{4}{subsection.1.2.8}%
+\contentsline {subsection}{\numberline {1.2.9}Law of Total Probability}{4}{subsection.1.2.9}%
+\contentsline {chapter}{\numberline {2}Learning Model}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Definition}{5}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Loss}{5}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Empirical Risk Minimization}{6}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Hypothesis Class}{6}{section.2.4}%
+\contentsline {section}{\numberline {2.5}PAC learning}{7}{section.2.5}%
